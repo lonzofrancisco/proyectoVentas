@@ -2,20 +2,27 @@ require("dotenv").config();
 const app = require("./src/app");
 const pool = require("./src/config/db");
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
+
+async function waitForDB() {
+  while (true) {
+    try {
+      await pool.query("SELECT 1");
+      console.log("✅ Conectado a MySQL");
+      break;
+    } catch (error) {
+      console.log("⏳ Esperando MySQL...");
+      await new Promise(res => setTimeout(res, 3000));
+    }
+  }
+}
 
 async function startServer() {
-  try {
-    // Probar conexión a MySQL
-    await pool.query("SELECT 1");
-    console.log("✅ Conectado a MySQL");
+  await waitForDB();
 
-    app.listen(PORT, () => {
-      console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
-    });
-  } catch (error) {
-    console.error("❌ Error conectando a MySQL:", error);
-  }
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`🚀 Servidor corriendo en ${PORT}`);
+  });
 }
 
 startServer();

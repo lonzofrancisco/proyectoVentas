@@ -13,7 +13,7 @@ function Store() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/store/${slug}`)
+    fetch(`http://localhost:3001/api/store/${slug}`)
       .then(res => res.json())
       .then(data => setStore(data));
   }, [slug]);
