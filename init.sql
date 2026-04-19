@@ -1,11 +1,20 @@
+-- Configurar charset UTF-8 para aceptar acentos y caracteres especiales
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+ALTER DATABASE ventas CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+SET character_set_client = utf8mb4;
+SET character_set_connection = utf8mb4;
+SET character_set_results = utf8mb4;
+
 CREATE TABLE businesses (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(150) NOT NULL,
-    slug VARCHAR(150) NOT NULL UNIQUE,
+    name VARCHAR(150) NOT NULL COLLATE utf8mb4_unicode_ci,
+    slug VARCHAR(150) NOT NULL UNIQUE COLLATE utf8mb4_unicode_ci,
     type ENUM('food','grocery','perfumery') DEFAULT 'grocery',
     logo VARCHAR(255),
     primary_color VARCHAR(20),
     whatsapp_number VARCHAR(20),
+    phone VARCHAR(20),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -22,7 +31,7 @@ CREATE TABLE users (
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
     business_id INT NOT NULL,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL COLLATE utf8mb4_unicode_ci,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE
 );
@@ -30,8 +39,8 @@ CREATE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     business_id INT NOT NULL,
     category_id INT,
-    name VARCHAR(150) NOT NULL,
-    description TEXT,
+    name VARCHAR(150) NOT NULL COLLATE utf8mb4_unicode_ci,
+    description TEXT COLLATE utf8mb4_unicode_ci,
     price DECIMAL(10,2) NOT NULL,
     image VARCHAR(255),
     is_active BOOLEAN DEFAULT TRUE,
@@ -44,7 +53,7 @@ CREATE TABLE products (
     CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     business_id INT NOT NULL,
-    customer_name VARCHAR(150) NOT NULL,
+    customer_name VARCHAR(150) NOT NULL COLLATE utf8mb4_unicode_ci,
     customer_phone VARCHAR(20) NOT NULL,
     total DECIMAL(10,2) NOT NULL,
     status ENUM('pending','confirmed','delivered','cancelled') DEFAULT 'pending',
@@ -62,3 +71,112 @@ CREATE TABLE order_items (
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
+
+-- =====================================
+-- DATOS DE EJEMPLO PARA LA BASE DE DATOS
+-- =====================================
+
+-- =====================================
+-- TABLA: negocios
+-- =====================================
+INSERT INTO businesses (name, slug, type, logo, primary_color, whatsapp_number, phone) VALUES
+('La Tienda del Barrio', 'la-tienda-del-barrio', 'grocery', '/images/tienda-logo.png', '#FF6B6B', '+34612345678', '+34612345678'),
+('Comidas Rápidas Don Jorge', 'comidas-don-jorge', 'food', '/images/don-jorge-logo.png', '#4ECDC4', '+34612345679', '+34612345679'),
+('Perfumería Elegancia', 'perfumeria-elegancia', 'perfumery', '/images/elegancia-logo.png', '#95E1D3', '+34612345680', '+34612345680');
+
+-- =====================================
+-- TABLA: usuarios
+-- =====================================
+-- NOTA: Las contraseñas están hasheadas con bcrypt (en producción usar siempre contraseñas hasheadas)
+-- Las contraseñas de ejemplo corresponden a: "password123"
+INSERT INTO users (business_id, email, password, role) VALUES
+(1, 'owner@tienda.com', '$2b$10$YIjlrHyAF.8gvpZQCPvEIu/Y4VjQVjDUqVzHGX6OjK5qZ3R9m6m1C', 'owner'),
+(1, 'admin@tienda.com', '$2b$10$YIjlrHyAF.8gvpZQCPvEIu/Y4VjQVjDUqVzHGX6OjK5qZ3R9m6m1C', 'admin'),
+(2, 'owner@comidas.com', '$2b$10$YIjlrHyAF.8gvpZQCPvEIu/Y4VjQVjDUqVzHGX6OjK5qZ3R9m6m1C', 'owner'),
+(3, 'owner@perfumeria.com', '$2b$10$YIjlrHyAF.8gvpZQCPvEIu/Y4VjQVjDUqVzHGX6OjK5qZ3R9m6m1C', 'owner');
+
+-- =====================================
+-- TABLA: categorías
+-- =====================================
+-- Categorías para tienda de abarrotes
+INSERT INTO categories (business_id, name) VALUES
+(1, 'Frutas y Verduras'),
+(1, 'Lácteos'),
+(1, 'Bebidas'),
+(1, 'Panadería'),
+-- Categorías para restaurante de comida rápida
+(2, 'Hamburguesas'),
+(2, 'Pizza'),
+(2, 'Bebidas'),
+(2, 'Postres'),
+-- Categorías para perfumería
+(3, 'Perfumes para Hombre'),
+(3, 'Perfumes para Mujer'),
+(3, 'Colonias'),
+(3, 'Fragancias Unisex');
+
+-- =====================================
+-- TABLA: productos
+-- =====================================
+INSERT INTO products (business_id, category_id, name, description, price, image, is_active) VALUES
+(1, 1, 'Manzanas Rojas', 'Manzanas frescas importadas de España', 2.50, '/images/manzanas.jpg', TRUE),
+(1, 1, 'Lechuga Fresca', 'Lechuga romana recién cosechada', 1.80, '/images/lechuga.jpg', TRUE),
+(1, 1, 'Tomates Maduros', 'Tomates de temporada muy frescos', 3.20, '/images/tomates.jpg', TRUE),
+(1, 2, 'Leche Entera 1L', 'Leche fresca de la mejor calidad', 1.45, '/images/leche.jpg', TRUE),
+(1, 2, 'Queso Manchego', 'Queso curado de 6 meses', 8.99, '/images/queso.jpg', TRUE),
+(1, 3, 'Agua Mineral 1.5L', 'Agua mineral natural sin gas', 0.99, '/images/agua.jpg', TRUE),
+(1, 3, 'Refresco Cola 2L', 'Bebida refrescante popular', 2.50, '/images/cola.jpg', TRUE),
+(1, 4, 'Pan Integral', 'Pan integral recién hecho', 2.99, '/images/pan-integral.jpg', TRUE),
+(1, 4, 'Croissant de Chocolate', 'Croissant francés con chocolate', 1.50, '/images/croissant.jpg', TRUE),
+(2, 5, 'Hamburguesa Clásica', 'Hamburguesa con carne de res, queso y lechuga', 8.99, '/images/hamburguesa.jpg', TRUE),
+(2, 5, 'Hamburguesa Doble', 'Doble carne, queso suizo y tocino', 12.99, '/images/hamburguesa-doble.jpg', TRUE),
+(2, 6, 'Pizza Margarita', 'Pizza clásica con tomate, mozzarella y albahaca', 10.99, '/images/pizza-margarita.jpg', TRUE),
+(2, 6, 'Pizza Pepperoni', 'Pizza con pepperoni y queso extra', 12.99, '/images/pizza-pepperoni.jpg', TRUE),
+(2, 7, 'Coca Cola 500ml', 'Bebida refrescante', 2.00, '/images/cola-botella.jpg', TRUE),
+(2, 7, 'Jugo Natural', 'Jugo de naranja recién exprimido', 3.50, '/images/jugo.jpg', TRUE),
+(2, 8, 'Flan Casero', 'Flan de huevo cremoso', 3.99, '/images/flan.jpg', TRUE),
+(2, 8, 'Brownie de Chocolate', 'Brownie fresco con chocolate derretido', 4.50, '/images/brownie.jpg', TRUE),
+(3, 9, 'Acqua di Gio', 'Fragancia fresca y acuática para caballero', 65.00, '/images/acqua-di-gio.jpg', TRUE),
+(3, 9, 'Sauvage', 'Perfume elegante y sofisticado', 89.99, '/images/sauvage.jpg', TRUE),
+(3, 10, 'Chanel No. 5', 'Clásico atemporal para mujer', 95.00, '/images/chanel-5.jpg', TRUE),
+(3, 10, 'Guilty', 'Fragancia seductora para mujer', 72.00, '/images/guilty.jpg', TRUE),
+(3, 11, 'Colonia Azul', 'Colonia fresca de uso diario', 15.99, '/images/colonia-azul.jpg', TRUE),
+(3, 12, 'CK One', 'Fragancia unisex popular', 45.00, '/images/ck-one.jpg', TRUE);
+
+-- =====================================
+-- TABLA: pedidos
+-- =====================================
+INSERT INTO orders (business_id, customer_name, customer_phone, total, status) VALUES
+(1, 'Juan Pérez', '+34655123456', 45.80, 'delivered'),
+(1, 'María García', '+34655123457', 28.50, 'confirmed'),
+(1, 'Carlos López', '+34655123458', 15.99, 'pending'),
+(2, 'Ana Rodríguez', '+34655123459', 32.98, 'delivered'),
+(2, 'Roberto Sánchez', '+34655123460', 29.98, 'confirmed'),
+(2, 'Elena Martínez', '+34655123461', 18.50, 'pending'),
+(3, 'Francisco Ruiz', '+34655123462', 154.99, 'delivered'),
+(3, 'Sofía Fernández', '+34655123463', 89.99, 'confirmed'),
+(3, 'Miguel Ángel', '+34655123464', 45.00, 'cancelled');
+
+-- =====================================
+-- TABLA: artículos del pedido
+-- =====================================
+INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
+(1, 1, 3, 2.50),
+(1, 4, 2, 1.45),
+(1, 8, 1, 2.99),
+(1, 6, 4, 0.99),
+(2, 2, 2, 1.80),
+(2, 5, 1, 8.99),
+(2, 7, 1, 2.50),
+(3, 9, 2, 1.50),
+(4, 10, 1, 8.99),
+(4, 11, 1, 12.99),
+(4, 13, 1, 2.00),
+(5, 12, 2, 10.99),
+(5, 14, 1, 3.50),
+(6, 16, 1, 3.99),
+(6, 17, 1, 4.50),
+(7, 18, 1, 65.00),
+(7, 20, 1, 89.99),
+(8, 19, 1, 89.99),
+(9, 23, 1, 45.00);
