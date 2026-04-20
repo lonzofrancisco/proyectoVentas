@@ -1,5 +1,6 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import StoreLayout from "../components/StoreLayout";
 import StoreHeader from "../components/StoreHeader";
 import ProductList from "../components/ProductList";
@@ -7,6 +8,8 @@ import SidebarCategories from "../components/SidebarCategories";
 
 function Store() {
   const { slug } = useParams();
+  const navigate = useNavigate();
+  const { user, isOwner } = useAuth();
 
   const [store, setStore] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);

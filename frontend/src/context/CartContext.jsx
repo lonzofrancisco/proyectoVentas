@@ -50,6 +50,40 @@ export function CartProvider({ children }) {
     setCart([]);
   };
 
+  const checkout = async (slug, customerName, customerPhone) => {
+    try {
+      const items = cart.map(item => ({
+        productId: item.id,
+        quantity: item.quantity
+      }));
+
+      const response = await fetch(`http://localhost:3001/api/store/${slug}/orders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customerName,
+          customerPhone,
+          items
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Error creando el pedido');
+      }
+
+      // Limpiar el carrito después de un pedido exitoso
+      clearCart();
+
+      return { success: true, order: data.order };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  };
+
   return (
     <CartContext.Provider value={{
   cart,
@@ -58,6 +92,7 @@ export function CartProvider({ children }) {
   increaseQuantity,
   decreaseQuantity,
   clearCart,
+  checkout,
   total
 }}>
       {children}

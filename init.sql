@@ -43,6 +43,7 @@ CREATE TABLE products (
     description TEXT COLLATE utf8mb4_unicode_ci,
     price DECIMAL(10,2) NOT NULL,
     image VARCHAR(255),
+    image_medium VARCHAR(255),
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE,
@@ -90,10 +91,10 @@ INSERT INTO businesses (name, slug, type, logo, primary_color, whatsapp_number, 
 -- NOTA: Las contraseñas están hasheadas con bcrypt (en producción usar siempre contraseñas hasheadas)
 -- Las contraseñas de ejemplo corresponden a: "password123"
 INSERT INTO users (business_id, email, password, role) VALUES
-(1, 'owner@tienda.com', '$2b$10$YIjlrHyAF.8gvpZQCPvEIu/Y4VjQVjDUqVzHGX6OjK5qZ3R9m6m1C', 'owner'),
-(1, 'admin@tienda.com', '$2b$10$YIjlrHyAF.8gvpZQCPvEIu/Y4VjQVjDUqVzHGX6OjK5qZ3R9m6m1C', 'admin'),
-(2, 'owner@comidas.com', '$2b$10$YIjlrHyAF.8gvpZQCPvEIu/Y4VjQVjDUqVzHGX6OjK5qZ3R9m6m1C', 'owner'),
-(3, 'owner@perfumeria.com', '$2b$10$YIjlrHyAF.8gvpZQCPvEIu/Y4VjQVjDUqVzHGX6OjK5qZ3R9m6m1C', 'owner');
+(1, 'owner@tienda.com', '$2b$10$68dLXV5zdo/RgStyCH40jOhkv8DNl1D0awnXi3JZbZb8hLDydWvmC', 'owner'),
+(1, 'admin@tienda.com', '$2b$10$68dLXV5zdo/RgStyCH40jOhkv8DNl1D0awnXi3JZbZb8hLDydWvmC', 'admin'),
+(2, 'owner@comidas.com', '$2b$10$68dLXV5zdo/RgStyCH40jOhkv8DNl1D0awnXi3JZbZb8hLDydWvmC', 'owner'),
+(3, 'owner@perfumeria.com', '$2b$10$68dLXV5zdo/RgStyCH40jOhkv8DNl1D0awnXi3JZbZb8hLDydWvmC', 'owner');
 
 -- =====================================
 -- TABLA: categorías
@@ -118,30 +119,30 @@ INSERT INTO categories (business_id, name) VALUES
 -- =====================================
 -- TABLA: productos
 -- =====================================
-INSERT INTO products (business_id, category_id, name, description, price, image, is_active) VALUES
-(1, 1, 'Manzanas Rojas', 'Manzanas frescas importadas de España', 2.50, '/images/manzanas.jpg', TRUE),
-(1, 1, 'Lechuga Fresca', 'Lechuga romana recién cosechada', 1.80, '/images/lechuga.jpg', TRUE),
-(1, 1, 'Tomates Maduros', 'Tomates de temporada muy frescos', 3.20, '/images/tomates.jpg', TRUE),
-(1, 2, 'Leche Entera 1L', 'Leche fresca de la mejor calidad', 1.45, '/images/leche.jpg', TRUE),
-(1, 2, 'Queso Manchego', 'Queso curado de 6 meses', 8.99, '/images/queso.jpg', TRUE),
-(1, 3, 'Agua Mineral 1.5L', 'Agua mineral natural sin gas', 0.99, '/images/agua.jpg', TRUE),
-(1, 3, 'Refresco Cola 2L', 'Bebida refrescante popular', 2.50, '/images/cola.jpg', TRUE),
-(1, 4, 'Pan Integral', 'Pan integral recién hecho', 2.99, '/images/pan-integral.jpg', TRUE),
-(1, 4, 'Croissant de Chocolate', 'Croissant francés con chocolate', 1.50, '/images/croissant.jpg', TRUE),
-(2, 5, 'Hamburguesa Clásica', 'Hamburguesa con carne de res, queso y lechuga', 8.99, '/images/hamburguesa.jpg', TRUE),
-(2, 5, 'Hamburguesa Doble', 'Doble carne, queso suizo y tocino', 12.99, '/images/hamburguesa-doble.jpg', TRUE),
-(2, 6, 'Pizza Margarita', 'Pizza clásica con tomate, mozzarella y albahaca', 10.99, '/images/pizza-margarita.jpg', TRUE),
-(2, 6, 'Pizza Pepperoni', 'Pizza con pepperoni y queso extra', 12.99, '/images/pizza-pepperoni.jpg', TRUE),
-(2, 7, 'Coca Cola 500ml', 'Bebida refrescante', 2.00, '/images/cola-botella.jpg', TRUE),
-(2, 7, 'Jugo Natural', 'Jugo de naranja recién exprimido', 3.50, '/images/jugo.jpg', TRUE),
-(2, 8, 'Flan Casero', 'Flan de huevo cremoso', 3.99, '/images/flan.jpg', TRUE),
-(2, 8, 'Brownie de Chocolate', 'Brownie fresco con chocolate derretido', 4.50, '/images/brownie.jpg', TRUE),
-(3, 9, 'Acqua di Gio', 'Fragancia fresca y acuática para caballero', 65.00, '/images/acqua-di-gio.jpg', TRUE),
-(3, 9, 'Sauvage', 'Perfume elegante y sofisticado', 89.99, '/images/sauvage.jpg', TRUE),
-(3, 10, 'Chanel No. 5', 'Clásico atemporal para mujer', 95.00, '/images/chanel-5.jpg', TRUE),
-(3, 10, 'Guilty', 'Fragancia seductora para mujer', 72.00, '/images/guilty.jpg', TRUE),
-(3, 11, 'Colonia Azul', 'Colonia fresca de uso diario', 15.99, '/images/colonia-azul.jpg', TRUE),
-(3, 12, 'CK One', 'Fragancia unisex popular', 45.00, '/images/ck-one.jpg', TRUE);
+INSERT INTO products (business_id, category_id, name, description, price, image, image_medium, is_active) VALUES
+(1, 1, 'Manzanas Rojas', 'Manzanas frescas importadas de España', 2.50, '/images/manzanas.jpg', '/images/medium/manzanas.jpg', TRUE),
+(1, 1, 'Lechuga Fresca', 'Lechuga romana recién cosechada', 1.80, '/images/lechuga.jpg', '/images/medium/lechuga.jpg', TRUE),
+(1, 1, 'Tomates Maduros', 'Tomates de temporada muy frescos', 3.20, '/images/tomates.jpg', '/images/medium/tomates.jpg', TRUE),
+(1, 2, 'Leche Entera 1L', 'Leche fresca de la mejor calidad', 1.45, '/images/leche.jpg', '/images/medium/leche.jpg', TRUE),
+(1, 2, 'Queso Manchego', 'Queso curado de 6 meses', 8.99, '/images/queso.jpg', '/images/medium/queso.jpg', TRUE),
+(1, 3, 'Agua Mineral 1.5L', 'Agua mineral natural sin gas', 0.99, '/images/agua.jpg', '/images/medium/agua.jpg', TRUE),
+(1, 3, 'Refresco Cola 2L', 'Bebida refrescante popular', 2.50, '/images/cola.jpg', '/images/medium/cola.jpg', TRUE),
+(1, 4, 'Pan Integral', 'Pan integral recién hecho', 2.99, '/images/pan-integral.jpg', '/images/medium/pan-integral.jpg', TRUE),
+(1, 4, 'Croissant de Chocolate', 'Croissant francés con chocolate', 1.50, '/images/croissant.jpg', '/images/medium/croissant.jpg', TRUE),
+(2, 5, 'Hamburguesa Clásica', 'Hamburguesa con carne de res, queso y lechuga', 8.99, '/images/hamburguesa.jpg', '/images/medium/hamburguesa.jpg', TRUE),
+(2, 5, 'Hamburguesa Doble', 'Doble carne, queso suizo y tocino', 12.99, '/images/hamburguesa-doble.jpg', '/images/medium/hamburguesa-doble.jpg', TRUE),
+(2, 6, 'Pizza Margarita', 'Pizza clásica con tomate, mozzarella y albahaca', 10.99, '/images/pizza-margarita.jpg', '/images/medium/pizza-margarita.jpg', TRUE),
+(2, 6, 'Pizza Pepperoni', 'Pizza con pepperoni y queso extra', 12.99, '/images/pizza-pepperoni.jpg', '/images/medium/pizza-pepperoni.jpg', TRUE),
+(2, 7, 'Coca Cola 500ml', 'Bebida refrescante', 2.00, '/images/cola-botella.jpg', '/images/medium/cola-botella.jpg', TRUE),
+(2, 7, 'Jugo Natural', 'Jugo de naranja recién exprimido', 3.50, '/images/jugo.jpg', '/images/medium/jugo.jpg', TRUE),
+(2, 8, 'Flan Casero', 'Flan de huevo cremoso', 3.99, '/images/flan.jpg', '/images/medium/flan.jpg', TRUE),
+(2, 8, 'Brownie de Chocolate', 'Brownie fresco con chocolate derretido', 4.50, '/images/brownie.jpg', '/images/medium/brownie.jpg', TRUE),
+(3, 9, 'Acqua di Gio', 'Fragancia fresca y acuática para caballero', 65.00, '/images/acqua-di-gio.jpg', '/images/medium/acqua-di-gio.jpg', TRUE),
+(3, 9, 'Sauvage', 'Perfume elegante y sofisticado', 89.99, '/images/sauvage.jpg', '/images/medium/sauvage.jpg', TRUE),
+(3, 10, 'Chanel No. 5', 'Clásico atemporal para mujer', 95.00, '/images/chanel-5.jpg', '/images/medium/chanel-5.jpg', TRUE),
+(3, 10, 'Guilty', 'Fragancia seductora para mujer', 72.00, '/images/guilty.jpg', '/images/medium/guilty.jpg', TRUE),
+(3, 11, 'Colonia Azul', 'Colonia fresca de uso diario', 15.99, '/images/colonia-azul.jpg', '/images/medium/colonia-azul.jpg', TRUE),
+(3, 12, 'CK One', 'Fragancia unisex popular', 45.00, '/images/ck-one.jpg', '/images/medium/ck-one.jpg', TRUE);
 
 -- =====================================
 -- TABLA: pedidos

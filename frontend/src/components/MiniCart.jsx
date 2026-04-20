@@ -1,5 +1,6 @@
 import { useContext, useState, useRef, useEffect } from "react";
 import { CartContext } from "../context/CartContext";
+import CheckoutModal from "./CheckoutModal";
 
 function MiniCart() {
 
@@ -12,6 +13,7 @@ function MiniCart() {
   } = useContext(CartContext);
 
   const [open, setOpen] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
   const cartRef = useRef();
 
   const totalItems = cart.reduce(
@@ -129,9 +131,10 @@ function MiniCart() {
 
 
           <button
-            onClick={() =>
-              console.log(JSON.stringify(cart, null, 2))
-            }
+            onClick={() => {
+              setOpen(false);
+              setCheckoutOpen(true);
+            }}
             className="w-full mt-3 bg-black text-white py-2 rounded-lg"
           >
             Finalizar compra
@@ -140,6 +143,11 @@ function MiniCart() {
         </div>
 
       )}
+
+      <CheckoutModal
+        isOpen={checkoutOpen}
+        onClose={() => setCheckoutOpen(false)}
+      />
 
     </div>
 

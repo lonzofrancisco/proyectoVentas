@@ -22,16 +22,16 @@ exports.getProducts = async (req, res) => {
 exports.createProduct = async (req, res) => {
   try {
     const businessId = req.user.businessId;
-    const { name, description, price, category_id } = req.body;
+    const { name, description, price, category_id, image, image_medium } = req.body;
 
     if (!name || !price) {
       return res.status(400).json({ message: "Nombre y precio son obligatorios" });
     }
 
     await pool.query(
-      `INSERT INTO products (business_id, category_id, name, description, price)
-       VALUES (?, ?, ?, ?, ?)`,
-      [businessId, category_id || null, name, description || null, price]
+      `INSERT INTO products (business_id, category_id, name, description, price, image, image_medium)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [businessId, category_id || null, name, description || null, price, image || null, image_medium || null]
     );
 
     res.status(201).json({ message: "Producto creado" });
@@ -45,13 +45,13 @@ exports.updateProduct = async (req, res) => {
   try {
     const businessId = req.user.businessId;
     const { id } = req.params;
-    const { name, description, price, category_id, is_active } = req.body;
+    const { name, description, price, category_id, is_active, image, image_medium } = req.body;
 
     await pool.query(
       `UPDATE products 
-       SET name = ?, description = ?, price = ?, category_id = ?, is_active = ?
+       SET name = ?, description = ?, price = ?, category_id = ?, is_active = ?, image = ?, image_medium = ?
        WHERE id = ? AND business_id = ?`,
-      [name, description, price, category_id, is_active, id, businessId]
+      [name, description, price, category_id, is_active, image || null, image_medium || null, id, businessId]
     );
 
     res.json({ message: "Producto actualizado" });
