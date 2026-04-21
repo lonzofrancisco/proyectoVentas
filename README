@@ -1,0 +1,30 @@
+# Proyecto Ventas
+
+## Descripción
+Aplicación de ventas con frontend en React y backend en Node.js, usando MySQL como base de datos.
+
+## Requisitos
+- Docker
+- Docker Compose
+
+## Instalación y Ejecución
+1. Clona el repositorio.
+2. Ejecuta `docker-compose up --build` para construir e iniciar los servicios.
+
+## Persistencia de Base de Datos
+Para mantener los datos de la base de datos entre diferentes PCs:
+
+### Backup
+- Ejecuta el script `scripts/backup-db.sh` (Linux/Mac) o `scripts/backup-db.ps1` (Windows) para crear un respaldo en `db_backup.sql`.
+
+### Restore
+- Copia `db_backup.sql` a la nueva PC.
+- Ejecuta `scripts/restore-db.sh` o `scripts/restore-db.ps1` para restaurar los datos.
+
+Asegúrate de que los contenedores estén ejecutándose antes de ejecutar los scripts.
+
+## Servicios
+- Frontend: http://localhost:5173
+- Backend: http://localhost:3001
+- phpMyAdmin: http://localhost:8080
+- MySQL: localhost:3307
