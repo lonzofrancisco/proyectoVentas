@@ -17,7 +17,9 @@ app.use(cors());
 app.use(express.json());
 
 // Servir archivos estáticos (imágenes)
-app.use('/images', express.static(path.join(__dirname, '../public/images')));
+app.use("/api/images", express.static(
+  path.join(__dirname, "../images")
+));
 
 app.get("/", (req, res) => {
     res.json({ message: "API funcionando 🚀" });

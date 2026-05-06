@@ -9,6 +9,8 @@ const initialForm = {
   description: "",
   price: "",
   category_id: "",
+  image: "",
+  product_type: "",
   is_active: true,
 };
 
@@ -111,6 +113,8 @@ function ProductManagement() {
         description: form.description.trim(),
         price: Number(form.price),
         category_id: form.category_id || null,
+        image: form.image.trim() || null,
+        product_type: form.product_type || null,
         is_active: form.is_active,
       };
 
@@ -156,6 +160,8 @@ function ProductManagement() {
       description: product.description || "",
       price: product.price?.toString() || "",
       category_id: product.category_id || "",
+      image: product.image || "",
+      product_type: product.product_type || "",
       is_active: Boolean(product.is_active),
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -273,6 +279,28 @@ function ProductManagement() {
               </select>
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Tipo de producto</label>
+              <input
+                name="product_type"
+                value={form.product_type}
+                onChange={handleChange}
+                placeholder="ej: burger, bebida, postre"
+                className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700">URL de imagen</label>
+              <input
+                name="image"
+                value={form.image}
+                onChange={handleChange}
+                placeholder="https://..."
+                className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+
             <div className="flex items-center gap-3">
               <input
                 id="active"
@@ -315,6 +343,7 @@ function ProductManagement() {
                 <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">ID</th>
                 <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Nombre</th>
                 <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Categoría</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Tipo</th>
                 <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Precio</th>
                 <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Activo</th>
                 <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-500">Acciones</th>
@@ -326,6 +355,7 @@ function ProductManagement() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{product.id}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{product.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{product.category_name || "-"}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{product.product_type || "-"}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${product.price}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${product.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
@@ -350,7 +380,7 @@ function ProductManagement() {
               ))}
               {products.length === 0 && (
                 <tr>
-                  <td colSpan="6" className="px-6 py-10 text-center text-gray-500">
+                  <td colSpan="7" className="px-6 py-10 text-center text-gray-500">
                     No hay artículos creados.
                   </td>
                 </tr>

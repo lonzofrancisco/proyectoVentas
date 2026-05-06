@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\PROYECTO VENTAS\\\\frontend\\\\public\\\\images\")",
+      "PowerShell(Copy-Item \"d:\\\\PROYECTO VENTAS\\\\backend\\\\public\\\\images\\\\burger.jpg\" \"d:\\\\PROYECTO VENTAS\\\\frontend\\\\public\\\\images\\\\burger.jpg\")"
+    ]
+  }
+}

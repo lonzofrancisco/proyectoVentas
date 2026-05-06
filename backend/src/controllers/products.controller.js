@@ -22,16 +22,16 @@ exports.getProducts = async (req, res) => {
 exports.createProduct = async (req, res) => {
   try {
     const businessId = req.user.businessId;
-    const { name, description, price, category_id, image, image_medium } = req.body;
+    const { name, description, price, category_id, image, product_type, is_active = true } = req.body;
 
     if (!name || !price) {
       return res.status(400).json({ message: "Nombre y precio son obligatorios" });
     }
 
     await pool.query(
-      `INSERT INTO products (business_id, category_id, name, description, price, image, image_medium)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [businessId, category_id || null, name, description || null, price, image || null, image_medium || null]
+      `INSERT INTO products (business_id, category_id, name, description, price, image, product_type, is_active)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [businessId, category_id || null, name, description || null, price, image || null, product_type || null, is_active ? 1 : 0]
     );
 
     res.status(201).json({ message: "Producto creado" });
@@ -45,7 +45,7 @@ exports.updateProduct = async (req, res) => {
   try {
     const businessId = req.user.businessId;
     const { id } = req.params;
-    const { name, description, price, category_id, is_active, image, image_medium } = req.body;
+    const { name, description, price, category_id, is_active, image, product_type } = req.body;
 
     if (!name || !price) {
       return res.status(400).json({ message: "Nombre y precio son obligatorios" });

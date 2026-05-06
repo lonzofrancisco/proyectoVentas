@@ -18,10 +18,10 @@ module.exports = (req, res, next) => {
   }
 };
 
-// Middleware para verificar que el usuario sea owner
+// Middleware para verificar que el usuario sea owner o admin
 const requireOwner = (req, res, next) => {
-  if (req.user.role !== 'owner') {
-    return res.status(403).json({ message: "Acceso denegado. Solo owners pueden acceder." });
+  if (req.user.role !== 'owner' && req.user.role !== 'admin') {
+    return res.status(403).json({ message: "Acceso denegado." });
   }
   next();
 };
