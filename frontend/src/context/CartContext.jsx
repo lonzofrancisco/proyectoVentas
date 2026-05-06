@@ -57,7 +57,7 @@ export function CartProvider({ children }) {
         quantity: item.quantity
       }));
 
-      const response = await fetch(`http://localhost:3001/api/store/${slug}/orders`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/store/${slug}/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

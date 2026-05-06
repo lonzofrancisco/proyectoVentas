@@ -47,12 +47,20 @@ exports.updateProduct = async (req, res) => {
     const { id } = req.params;
     const { name, description, price, category_id, is_active, image, image_medium } = req.body;
 
-    await pool.query(
-      `UPDATE products 
+    if (!name || !price) {
+      return res.status(400).json({ message: "Nombre y precio son obligatorios" });
+    }
+
+    const [result] = await pool.query(
+      `UPDATE products
        SET name = ?, description = ?, price = ?, category_id = ?, is_active = ?, image = ?, image_medium = ?
        WHERE id = ? AND business_id = ?`,
-      [name, description, price, category_id, is_active, image || null, image_medium || null, id, businessId]
+      [name, description || null, price, category_id || null, is_active, image || null, image_medium || null, id, businessId]
     );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Producto no encontrado" });
+    }
 
     res.json({ message: "Producto actualizado" });
   } catch (error) {
@@ -66,10 +74,14 @@ exports.deleteProduct = async (req, res) => {
     const businessId = req.user.businessId;
     const { id } = req.params;
 
-    await pool.query(
+    const [result] = await pool.query(
       "DELETE FROM products WHERE id = ? AND business_id = ?",
       [id, businessId]
     );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Producto no encontrado" });
+    }
 
     res.json({ message: "Producto eliminado" });
   } catch (error) {
