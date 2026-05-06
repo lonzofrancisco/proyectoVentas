@@ -169,19 +169,22 @@ exports.createOrder = async (req, res) => {
     const orderItems = [];
 
     for (const item of items) {
+      if (!item.productId || !item.quantity || item.quantity <= 0) {
+        return res.status(400).json({ message: "Datos de producto inválidos" });
+      }
+
       const [products] = await pool.query(
         "SELECT id, name, price FROM products WHERE id = ? AND business_id = ? AND is_active = TRUE",
-        [item.productId, item.quantity, businessId]
+        [item.productId, businessId]
       );
+
+      if (products.length === 0) {
+        return res.status(400).json({ message: `Producto ${item.productId} no encontrado` });
+      }
 
       const product = products[0];
       const itemTotal = product.price * item.quantity;
       total += itemTotal;
-
-      
-      if (products.length === 0) {
-        return res.status(400).json({ message: `Producto ${item.productId} no encontrado` });
-      }
 
       orderItems.push({
         productId: product.id,
