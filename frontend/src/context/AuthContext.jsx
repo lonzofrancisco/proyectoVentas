@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isOwner = () => {
-    return user && user.role === 'owner';
+    return user && (user.role === 'owner' || user.role === 'admin');
   };
 
   const value = {

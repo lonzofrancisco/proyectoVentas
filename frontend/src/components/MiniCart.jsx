@@ -2,6 +2,18 @@ import { useContext, useState, useRef, useEffect } from "react";
 import { CartContext } from "../context/CartContext";
 import CheckoutModal from "./CheckoutModal";
 
+// Función para obtener ícono según tipo de producto
+function getProductIcon(productType) {
+  const icons = {
+    burger: '🍔',
+    drink: '🥤',
+    side: '🍟',
+    dessert: '🍰',
+    other: '📦'
+  };
+  return icons[productType] || icons.other;
+}
+
 function MiniCart() {
 
   const {
@@ -78,13 +90,22 @@ function MiniCart() {
           {cart.map(item => (
 
             <div
-              key={item.id}
-              className="flex justify-between items-center mb-3"
+              key={item.meatCount ? `${item.id}-meat${item.meatCount}` : item.id}
+              className="flex justify-between items-center mb-3 pb-3 border-b last:border-0"
             >
 
-              <div className="flex flex-col text-sm">
+              <div className="flex flex-col text-sm flex-1">
 
-                <span>{item.name}</span>
+                <div className="flex items-center gap-1">
+                  <span className="text-base">{getProductIcon(item.product_type)}</span>
+                  <span className="font-medium">{item.name}</span>
+                </div>
+
+                {item.meatCount && (
+                  <span className="text-orange-600 text-xs font-semibold ml-5">
+                    🍖 {item.meatCount} carnes
+                  </span>
+                )}
 
                 <span className="text-gray-500">
                   ${item.price}
@@ -93,27 +114,27 @@ function MiniCart() {
               </div>
 
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 ml-2">
 
                 <button
-                  onClick={() => decreaseQuantity(item.id)}
-                  className="px-2 border rounded"
+                  onClick={() => decreaseQuantity(item.id, item.meatCount || null)}
+                  className="px-2 py-1 border rounded hover:bg-gray-100"
                 >
-                  -
+                  −
                 </button>
 
-                <span>{item.quantity}</span>
+                <span className="w-6 text-center font-semibold">{item.quantity}</span>
 
                 <button
-                  onClick={() => increaseQuantity(item.id)}
-                  className="px-2 border rounded"
+                  onClick={() => increaseQuantity(item.id, item.meatCount || null)}
+                  className="px-2 py-1 border rounded hover:bg-gray-100"
                 >
                   +
                 </button>
 
                 <button
-                  onClick={() => removeFromCart(item.id)}
-                  className="text-red-500"
+                  onClick={() => removeFromCart(item.id, item.meatCount || null)}
+                  className="text-red-500 ml-1 hover:text-red-700 px-2"
                 >
                   🗑
                 </button>
